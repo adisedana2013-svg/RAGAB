@@ -1,0 +1,6 @@
+{
+  "name": "RAGAB - Aplikasi Razia Gabungan",
+  "description": "Aplikasi Rekapitulasi Razia Gabungan UPTD PPRD: Input Data Kegiatan, Rekapitulasi Bulanan, Cetak Laporan, serta Backup & Restore Data JSON.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

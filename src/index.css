@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Custom scrollbar styles */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Official Print Media Stylesheet */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 11pt;
+  }
+
+  /* Hide all interactive non-printable UI elements */
+  .no-print,
+  button,
+  nav,
+  header,
+  .btn-group,
+  .filter-bar {
+    display: none !important;
+  }
+
+  /* Ensure print document takes full printable width and is borderless wrapper */
+  .print-document {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1pt solid #000 !important;
+    color: #000 !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .break-inside-avoid {
+    page-break-inside: avoid;
+  }
+}
