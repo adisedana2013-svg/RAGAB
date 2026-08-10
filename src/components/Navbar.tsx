@@ -4,17 +4,14 @@ import {
   BarChart3,
   Printer,
   Database,
-  Settings,
   ShieldAlert,
   Download,
-  Upload,
-  RotateCcw,
 } from 'lucide-react';
 import { AppSettings } from '../types';
 
 interface NavbarProps {
-  activeTab: 'kegiatan' | 'rekap' | 'cetak' | 'backup' | 'pengaturan';
-  setActiveTab: (tab: 'kegiatan' | 'rekap' | 'cetak' | 'backup' | 'pengaturan') => void;
+  activeTab: 'kegiatan' | 'rekap' | 'cetak' | 'backup';
+  setActiveTab: (tab: 'kegiatan' | 'rekap' | 'cetak' | 'backup') => void;
   settings: AppSettings;
   totalRecords: number;
   onExportBackup: () => void;
@@ -119,18 +116,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Database className="w-4 h-4" />
           <span>Backup & Restore JSON</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('pengaturan')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold whitespace-nowrap transition-all ${
-            activeTab === 'pengaturan'
-              ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
-        >
-          <Settings className="w-4 h-4" />
-          <span>Pengaturan Kop & Pejabat</span>
         </button>
       </div>
     </header>

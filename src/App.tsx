@@ -14,12 +14,11 @@ import { TableKegiatan } from './components/TableKegiatan';
 import { RekapBulanan } from './components/RekapBulanan';
 import { CetakView } from './components/CetakView';
 import { BackupRestoreModal } from './components/BackupRestoreModal';
-import { PengaturanModal } from './components/PengaturanModal';
 
 export default function App() {
   const [dataItems, setDataItems] = useState<RaziaItem[]>([]);
   const [settings, setSettings] = useState<AppSettings>(loadSettingsFromStorage());
-  const [activeTab, setActiveTab] = useState<'kegiatan' | 'rekap' | 'cetak' | 'backup' | 'pengaturan'>('kegiatan');
+  const [activeTab, setActiveTab] = useState<'kegiatan' | 'rekap' | 'cetak' | 'backup'>('kegiatan');
   const [editingItem, setEditingItem] = useState<RaziaItem | null>(null);
 
   // Filters for printing when jumped from Rekap Bulanan
@@ -183,16 +182,6 @@ export default function App() {
               settings={settings}
               onRestoreData={handleRestoreData}
               onResetToDemo={handleResetToDemo}
-            />
-          </main>
-        )}
-
-        {/* Tab 5: Pengaturan Kop & Pejabat */}
-        {activeTab === 'pengaturan' && (
-          <main>
-            <PengaturanModal
-              settings={settings}
-              onSaveSettings={handleUpdateSettings}
             />
           </main>
         )}
