@@ -25,7 +25,7 @@ export const CetakView: React.FC<CetakViewProps> = ({
   const [selectedMonth, setSelectedMonth] = useState<string>(defaultMonth);
   const [selectedYear, setSelectedYear] = useState<string>(defaultYear);
   const [showNotes, setShowNotes] = useState<boolean>(true);
-  const [showDetailTable, setShowDetailTable] = useState<boolean>(false);
+  const [showDetailTable, setShowDetailTable] = useState<boolean>(true);
 
   // Extract available years
   const availableYears = useMemo(() => {
@@ -91,6 +91,40 @@ export const CetakView: React.FC<CetakViewProps> = ({
       totalRealisasiUnit, totalRealisasiRp,
       grandTotalDiperiksa: totalDiperiksaR2 + totalDiperiksaR4,
       grandTotalPenerimaan: totalNominalBayar + totalRealisasiRp,
+    };
+  }, [filteredItems]);
+
+  // Totals for Lampiran Rincian Harian
+  const lampiranTotals = useMemo(() => {
+    let totalHidup = 0, totalMati = 0, totalBBN = 0, totalLuar = 0, totalDiperiksa = 0;
+    let totalBayarUnit = 0, totalBayarRp = 0;
+    let totalSamsatUnit = 0, totalSamsatRp = 0;
+
+    filteredItems.forEach((item) => {
+      const diperiksa = calculateTotalDiperiksa(item);
+      totalHidup += item.pajakHidup || 0;
+      totalMati += item.pajakMati || 0;
+      totalBBN += item.belumBalikNama || 0;
+      totalLuar += item.luarProvinsi || 0;
+      totalDiperiksa += diperiksa;
+      totalBayarUnit += item.yangMembayarUnit || 0;
+      totalBayarRp += item.nominalBayar || 0;
+      totalSamsatUnit += item.realisasiSamsatUnit || 0;
+      totalSamsatRp += item.realisasiSamsatRp || 0;
+    });
+
+    return {
+      totalHidup,
+      totalMati,
+      totalBBN,
+      totalLuar,
+      totalDiperiksa,
+      totalBayarUnit,
+      totalBayarRp,
+      totalSamsatUnit,
+      totalSamsatRp,
+      totalPenerimaanUnit: totalBayarUnit + totalSamsatUnit,
+      totalPenerimaanRp: totalBayarRp + totalSamsatRp,
     };
   }, [filteredItems]);
 
@@ -304,41 +338,80 @@ export const CetakView: React.FC<CetakViewProps> = ({
         {showDetailTable && filteredItems.length > 0 && (
           <div className="mb-8 page-break-before">
             <h4 className="text-xs font-bold uppercase underline mb-2">Lampiran: Rincian Data Razia Harian</h4>
-            <table className="w-full border-collapse border border-slate-900 text-[10px] text-center">
-              <thead>
-                <tr className="bg-slate-100 font-bold">
-                  <th className="border border-slate-900 p-1">TGL</th>
-                  <th className="border border-slate-900 p-1">JNS</th>
-                  <th className="border border-slate-900 p-1 text-left">LOKASI POS</th>
-                  <th className="border border-slate-900 p-1">HIDUP</th>
-                  <th className="border border-slate-900 p-1">MATI</th>
-                  <th className="border border-slate-900 p-1">BBN</th>
-                  <th className="border border-slate-900 p-1">LUAR</th>
-                  <th className="border border-slate-900 p-1 font-bold">DIPERIKSA</th>
-                  <th className="border border-slate-900 p-1">BAYAR (UNIT)</th>
-                  <th className="border border-slate-900 p-1">BAYAR (RP)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredItems.map((item) => {
-                  const diperiksa = calculateTotalDiperiksa(item);
-                  return (
-                    <tr key={item.id}>
-                      <td className="border border-slate-900 p-1 whitespace-nowrap">{item.tanggal}</td>
-                      <td className="border border-slate-900 p-1 font-bold">{item.jenis}</td>
-                      <td className="border border-slate-900 p-1 text-left">{item.lokasi || '-'}</td>
-                      <td className="border border-slate-900 p-1">{item.pajakHidup}</td>
-                      <td className="border border-slate-900 p-1 font-bold">{item.pajakMati}</td>
-                      <td className="border border-slate-900 p-1">{item.belumBalikNama}</td>
-                      <td className="border border-slate-900 p-1">{item.luarProvinsi}</td>
-                      <td className="border border-slate-900 p-1 font-extrabold">{diperiksa}</td>
-                      <td className="border border-slate-900 p-1">{item.yangMembayarUnit}</td>
-                      <td className="border border-slate-900 p-1 font-semibold">{formatRupiah(item.nominalBayar)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-900 text-[10px] text-center">
+                <thead>
+                  <tr className="bg-slate-200 text-slate-900 font-bold">
+                    <th rowSpan={2} className="border border-slate-900 p-1 w-6">NO</th>
+                    <th rowSpan={2} className="border border-slate-900 p-1 w-16">TGL</th>
+                    <th rowSpan={2} className="border border-slate-900 p-1 w-8">JNS</th>
+                    <th rowSpan={2} className="border border-slate-900 p-1 text-left">LOKASI POS RAZIA</th>
+                    <th colSpan={4} className="border border-slate-900 p-1">HASIL PEMERIKSAAN (UNIT)</th>
+                    <th rowSpan={2} className="border border-slate-900 p-1 font-black bg-slate-300 w-12">TOTAL DIPERIKSA</th>
+                    <th colSpan={2} className="border border-slate-900 p-1 bg-emerald-100">BAYAR DI TEMPAT</th>
+                    <th colSpan={2} className="border border-slate-900 p-1 bg-sky-100">REALISASI SAMSAT</th>
+                    <th colSpan={2} className="border border-slate-900 p-1 bg-slate-300">TOTAL PENERIMAAN</th>
+                  </tr>
+                  <tr className="bg-slate-100 text-slate-900 font-bold">
+                    <th className="border border-slate-900 p-1 w-8">HIDUP</th>
+                    <th className="border border-slate-900 p-1 w-8">MATI</th>
+                    <th className="border border-slate-900 p-1 w-8">BBN</th>
+                    <th className="border border-slate-900 p-1 w-8">LUAR</th>
+                    <th className="border border-slate-900 p-1 w-8">UNIT</th>
+                    <th className="border border-slate-900 p-1 w-20">NOMINAL (RP)</th>
+                    <th className="border border-slate-900 p-1 w-8">UNIT</th>
+                    <th className="border border-slate-900 p-1 w-20">NOMINAL (RP)</th>
+                    <th className="border border-slate-900 p-1 w-8 bg-slate-200">UNIT</th>
+                    <th className="border border-slate-900 p-1 w-24 bg-slate-200">TOTAL BAYAR (RP)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredItems.map((item, idx) => {
+                    const diperiksa = calculateTotalDiperiksa(item);
+                    const totalPenerimaanItem = (item.nominalBayar || 0) + (item.realisasiSamsatRp || 0);
+                    const totalUnitItem = (item.yangMembayarUnit || 0) + (item.realisasiSamsatUnit || 0);
+
+                    return (
+                      <tr key={item.id} className="hover:bg-slate-50">
+                        <td className="border border-slate-900 p-1 font-semibold">{idx + 1}</td>
+                        <td className="border border-slate-900 p-1 whitespace-nowrap">{item.tanggal}</td>
+                        <td className="border border-slate-900 p-1 font-bold">{item.jenis}</td>
+                        <td className="border border-slate-900 p-1 text-left">{item.lokasi || '-'}</td>
+                        <td className="border border-slate-900 p-1">{formatNumber(item.pajakHidup)}</td>
+                        <td className="border border-slate-900 p-1 font-bold">{formatNumber(item.pajakMati)}</td>
+                        <td className="border border-slate-900 p-1">{formatNumber(item.belumBalikNama)}</td>
+                        <td className="border border-slate-900 p-1">{formatNumber(item.luarProvinsi)}</td>
+                        <td className="border border-slate-900 p-1 font-black bg-slate-50">{formatNumber(diperiksa)}</td>
+                        <td className="border border-slate-900 p-1">{formatNumber(item.yangMembayarUnit)}</td>
+                        <td className="border border-slate-900 p-1 font-semibold text-right">{formatRupiah(item.nominalBayar)}</td>
+                        <td className="border border-slate-900 p-1">{formatNumber(item.realisasiSamsatUnit)}</td>
+                        <td className="border border-slate-900 p-1 font-semibold text-right">{formatRupiah(item.realisasiSamsatRp)}</td>
+                        <td className="border border-slate-900 p-1 font-bold bg-slate-50">{formatNumber(totalUnitItem)}</td>
+                        <td className="border border-slate-900 p-1 font-black bg-slate-100 text-right">{formatRupiah(totalPenerimaanItem)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-slate-200 text-slate-950 font-extrabold text-[10px]">
+                    <td colSpan={4} className="border border-slate-900 p-1.5 text-right uppercase">
+                      JUMLAH TOTAL:
+                    </td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalHidup)}</td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalMati)}</td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalBBN)}</td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalLuar)}</td>
+                    <td className="border border-slate-900 p-1 bg-slate-300 font-black">{formatNumber(lampiranTotals.totalDiperiksa)}</td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalBayarUnit)}</td>
+                    <td className="border border-slate-900 p-1 text-right">{formatRupiah(lampiranTotals.totalBayarRp)}</td>
+                    <td className="border border-slate-900 p-1">{formatNumber(lampiranTotals.totalSamsatUnit)}</td>
+                    <td className="border border-slate-900 p-1 text-right">{formatRupiah(lampiranTotals.totalSamsatRp)}</td>
+                    <td className="border border-slate-900 p-1 bg-slate-300">{formatNumber(lampiranTotals.totalPenerimaanUnit)}</td>
+                    <td className="border border-slate-900 p-1 bg-slate-300 font-black text-right">{formatRupiah(lampiranTotals.totalPenerimaanRp)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
         )}
 
