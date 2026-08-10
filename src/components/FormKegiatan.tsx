@@ -279,20 +279,28 @@ export const FormKegiatan: React.FC<FormKegiatanProps> = ({
                   type="number"
                   min="0"
                   value={yangMembayarUnit}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => setYangMembayarUnit(Math.max(0, parseInt(e.target.value) || 0))}
                   className="w-full px-3 py-2 bg-white border border-emerald-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 mb-1">Nominal (Rp)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="10000"
-                  value={nominalBayar}
-                  onChange={(e) => setNominalBayar(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="w-full px-3 py-2 bg-white border border-emerald-300 rounded-xl text-sm font-bold text-emerald-800 focus:ring-2 focus:ring-emerald-500"
-                />
+                <div className="relative flex items-center">
+                  <span className="absolute left-3 text-xs font-bold text-emerald-600 select-none">Rp</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={nominalBayar === 0 ? '' : nominalBayar.toLocaleString('id-ID')}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, '');
+                      setNominalBayar(raw ? parseInt(raw, 10) : 0);
+                    }}
+                    placeholder="0"
+                    className="w-full pl-9 pr-3 py-2 bg-white border border-emerald-300 rounded-xl text-sm font-bold text-emerald-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
                 <div className="text-[10px] text-emerald-700 font-semibold mt-1">
                   {formatRupiah(nominalBayar)}
                 </div>
@@ -312,20 +320,28 @@ export const FormKegiatan: React.FC<FormKegiatanProps> = ({
                   type="number"
                   min="0"
                   value={realisasiSamsatUnit}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => setRealisasiSamsatUnit(Math.max(0, parseInt(e.target.value) || 0))}
                   className="w-full px-3 py-2 bg-white border border-sky-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-sky-500"
                 />
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 mb-1">Nominal (Rp)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="10000"
-                  value={realisasiSamsatRp}
-                  onChange={(e) => setRealisasiSamsatRp(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="w-full px-3 py-2 bg-white border border-sky-300 rounded-xl text-sm font-bold text-sky-800 focus:ring-2 focus:ring-sky-500"
-                />
+                <div className="relative flex items-center">
+                  <span className="absolute left-3 text-xs font-bold text-sky-600 select-none">Rp</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={realisasiSamsatRp === 0 ? '' : realisasiSamsatRp.toLocaleString('id-ID')}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, '');
+                      setRealisasiSamsatRp(raw ? parseInt(raw, 10) : 0);
+                    }}
+                    placeholder="0"
+                    className="w-full pl-9 pr-3 py-2 bg-white border border-sky-300 rounded-xl text-sm font-bold text-sky-800 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                  />
+                </div>
                 <div className="text-[10px] text-sky-700 font-semibold mt-1">
                   {formatRupiah(realisasiSamsatRp)}
                 </div>

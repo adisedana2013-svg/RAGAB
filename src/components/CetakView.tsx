@@ -219,20 +219,6 @@ export const CetakView: React.FC<CetakViewProps> = ({
 
       {/* Printable Report Document Container */}
       <div className="bg-white rounded-2xl shadow-md border border-slate-200 p-8 md:p-12 text-slate-900 print-document font-sans">
-        {/* KOP SURAT */}
-        <div className="border-b-4 border-double border-slate-900 pb-4 mb-6 text-center">
-          <h3 className="text-base md:text-lg font-black uppercase tracking-wider text-slate-900">
-            {settings.namaInstansi || 'PEMERINTAH PROVINSI BALI'}
-          </h3>
-          <h4 className="text-xs md:text-sm font-extrabold whitespace-pre-line text-slate-800 mt-1">
-            {settings.subTitle ||
-              'BADAN PENGELOLAAN KEUANGAN DAN PENDAPATAN DAERAH\nUPTD PELAYANAN PAJAK DAN RETRIBUSI DAERAH (PPRD) DI KABUPATEN BANGLI'}
-          </h4>
-          <p className="text-[11px] text-slate-600 italic mt-1">
-            Alamat: Jl. Brigjen Ngurah Rai No. 34 Bangli | Telp. (0366) 91045
-          </p>
-        </div>
-
         {/* REPORT TITLE */}
         <div className="text-center mb-6">
           <h2 className="text-base md:text-lg font-extrabold underline uppercase tracking-wide text-slate-900">
@@ -416,34 +402,13 @@ export const CetakView: React.FC<CetakViewProps> = ({
         )}
 
         {/* NOTES / CATATAN LAPANGAN */}
-        <div className="text-xs text-slate-800 mb-8 p-3 border border-slate-300 rounded bg-slate-50/50">
+        <div className="text-xs text-slate-800 p-3 border border-slate-300 rounded bg-slate-50/50">
           <p className="font-bold mb-1">Catatan Pelaksanaan Operasi:</p>
           <ol className="list-decimal pl-4 space-y-1 text-[11px]">
             <li>Operasi Razia Gabungan dilaksanakan bersama unsur Kepolisian, Dinas Perhubungan, dan PT. Jasa Raharja.</li>
             <li>Wajib Pajak yang menunggak diberikan pilihan pembayaran langsung di lokasi razia melalui Mobil Samsat Keliling atau surat pernyataan ke kantor Samsat.</li>
             <li>Dokumen ini dicetak otomatis dari Aplikasi Rekapitulasi Razia Gabungan (RAGAB).</li>
           </ol>
-        </div>
-
-        {/* SIGNATURE BLOCK */}
-        <div className="grid grid-cols-2 gap-8 text-xs font-semibold text-slate-900 pt-4 mt-8 break-inside-avoid">
-          {/* Left Signee: Katim Razia */}
-          <div className="text-center space-y-1">
-            <p>Mengetahui / Penanggung Jawab Tim,</p>
-            <p className="font-bold">{settings.jabatanPenanggungJawab || 'Ketua Tim Razia Gabungan'}</p>
-            <div className="h-20"></div>
-            <p className="font-black underline text-sm uppercase">{settings.penanggungJawab || 'I Wayan Karsa, S.Sos.'}</p>
-            <p className="text-[11px] text-slate-700">NIP. {settings.nipPenanggungJawab || '-'}</p>
-          </div>
-
-          {/* Right Signee: Kepala UPTD PPRD */}
-          <div className="text-center space-y-1">
-            <p>{getTodayFormatted()}</p>
-            <p className="font-bold">{settings.jabatanKepala || 'Kepala UPTD PPRD Provinsi Bali di Kab. Bangli'}</p>
-            <div className="h-20"></div>
-            <p className="font-black underline text-sm uppercase">{settings.kepalaInstansi || 'I Made Sudiarta, S.H., M.H.'}</p>
-            <p className="text-[11px] text-slate-700">NIP. {settings.nipKepala || '-'}</p>
-          </div>
         </div>
       </div>
     </div>
